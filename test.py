@@ -145,8 +145,22 @@ class ScreenConfig(Screen):
     def back(self, *args):
         self.manager.transition.direction = 'left'
         self.manager.current = 'config1'
-    def output_ (self):
+
+    def determine_visual(self, what_visual, num, event):
+        if what_visual[num][event] == False:
+            what_visual[num][event] = True
+        else:
+            what_visual[num][event] = False
+        print(what_visual)
+
+    def output_(self):
+        what_visual = []
         for i in range(int(sm.get_screen('config1').ids.inpt.text)):
+
+            opr_dict = {}
+            for ev in get_event():
+                opr_dict[ev] = False
+            what_visual.append(opr_dict)
             kol = Label(text='Напишите название блоков', color=[0, 0, 0, 1], size_hint=[1, .1], )
             self.gl.add_widget(kol)
             self.kol = TextInput(
@@ -163,14 +177,17 @@ class ScreenConfig(Screen):
                 dropdown.add_widget(btn1)
             mainbutton = Button(text='Hello', size_hint=(1, 1),  background_color=[0, 1.5, 3, 1], )
             mainbutton.bind(on_release=dropdown.open)
-            dropdown.bind(on_select=lambda instance, x: print(self.gl.children[::-1][(x[0] * 3) + 1].text, x[1]))
-            # dropdown.bind(on_select=lambda instance, x: print(self.gl.children[::-1][(x * 3) + 2].text))
+            dropdown.bind(on_select=lambda instance, x: self.determine_visual(what_visual, x[0], x[1]))
+            # dropdown.bind(on_select=lambda instance, x: print(self.gl.children[::-1][(x[0] * 3) + 1].text, x[1]))
             # dropdown.select(int(btn1.group[-1]))
             self.gl.add_widget(mainbutton)
         print(self.gl.children)
+
         self.bl.add_widget(self.gl)
         kol = Label(text=f'', color=[0, 0, 0, 1])
+        # self.determine_visual(what_visual)
         self.bl.add_widget(kol)
+
 
 
     def get_data(self, ind):
