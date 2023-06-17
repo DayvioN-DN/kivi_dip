@@ -159,12 +159,13 @@ class ScreenConfig(Screen):
 
             for index in get_event():
                 btn1 = ToggleButton(text=f'{index}', group=f'{index}-{i}', size_hint_y=None, height=23, )
-                btn1.bind(on_release=lambda btn1: dropdown.select(int(btn1.group[-1])))
+                btn1.bind(on_release=lambda btn1: dropdown.select([int(btn1.group[-1]), btn1.text]))
                 dropdown.add_widget(btn1)
             mainbutton = Button(text='Hello', size_hint=(1, 1),  background_color=[0, 1.5, 3, 1], )
             mainbutton.bind(on_release=dropdown.open)
-            dropdown.bind(on_select=lambda instance, x: print(self.gl.children[::-1][(x * 3) + 1].text))
-
+            dropdown.bind(on_select=lambda instance, x: print(self.gl.children[::-1][(x[0] * 3) + 1].text, x[1]))
+            # dropdown.bind(on_select=lambda instance, x: print(self.gl.children[::-1][(x * 3) + 2].text))
+            # dropdown.select(int(btn1.group[-1]))
             self.gl.add_widget(mainbutton)
         print(self.gl.children)
         self.bl.add_widget(self.gl)
