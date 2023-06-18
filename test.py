@@ -12,7 +12,11 @@ from kivy.uix.dropdown import DropDown
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.filechooser import FileChooser
+from kivy.uix.image import Image
+
 from obrabot import *
+
+
 
 Window.clearcolor = (1, 1, 1, 1)
 sm = ScreenManager()
@@ -210,15 +214,35 @@ class Screenvisual(Screen):
             background_color=[0, 1.5, 3, 1],
             size_hint=[.1, 0.1],
              )
-        ad = self.btn.text
         al.add_widget(self.btn)
         self.add_widget(al)
 
-
+    def click(self, mainbutton1):
+        mainbutton1 = [mainbutton1]
+        a = sm.get_screen('config2').what_visual
+        print(mainbutton1, 'ada')
+        for block_visual in range(int(sm.get_screen('config1').ids.inpt.text)):
+            b = []
+            for i in a[block_visual]:
+                if a[block_visual][i] == False:
+                    b.append(i)
+            for i in b:
+                a[block_visual].pop(i)
+            work(mainbutton1[:1], a[block_visual], block_visual)
+            print(a)
+            self.gl = GridLayout(cols=4, padding=[50])
+            kol = Label(text='название ', color=[0, 0, 0, 1], size_hint=[.05, .1])
+            self.gl.add_widget(kol)
+        for img in range(3, 9):
+            im = Image(source=f"source/img_{mainbutton1[0]}-{img}-{block_visual}.png", )
+            self.gl.add_widget(im)
+        self.bl.add_widget(self.gl)
+        self.add_widget(self.bl)
     def visual(self):
+        self.al = AnchorLayout(anchor_x="center", anchor_y="top", padding=[10])
         self.bl = BoxLayout(orientation='vertical')
-        self.gl_vis = GridLayout(cols=2, size_hint=[1, .05], padding=[50])
-        self.al = AnchorLayout(anchor_x="center", anchor_y="top", padding=[10],size_hint=[1, .2])
+        self.gl_vis = GridLayout(cols=2, size_hint=[1, .2], padding=[50])
+
         dropdown1 = DropDown()
 
         kol = Label(text='выберите студента ', color=[0, 0, 0, 1], size=[700, 80])
@@ -230,23 +254,15 @@ class Screenvisual(Screen):
             dropdown1.add_widget(btn)
         mainbutton1 = Button(text='Выберите студента',  size_hint=(None, None), background_color=[0, 1.5, 3, 1], size = [180, 40])
         mainbutton1.bind(on_release=dropdown1.open)
-        dropdown1.bind(on_select=lambda instance, x: setattr(mainbutton1, 'text', x))
+        dropdown1.bind(on_select=lambda instance, x: self.click(x))
         self.gl_vis.add_widget(mainbutton1)
-        self.drop_vis = DropDown(size_hint=[1, 1])
-        bt_vis = Button(text='визуализировать', size_hint=(None, None), background_color=[0, 1.5, 3, 1], size=[180, 40], on_press = self.drop_vis.open)
-        self.gl_vis.add_widget(bt_vis)
         self.al.add_widget(self.gl_vis)
-        self.bl.add_widget(self.al)
+        self.add_widget(self.al)
 
 
-        for block_visual in range(int(sm.get_screen('config1').ids.inpt.text)):
-            self.gl = GridLayout(cols=7, size_hint_y=None, height=55, padding=[50])
-            kol = Label(text='Напишите название ', color=[0, 0, 0, 1], size_hint_y=None, height=55)
-            self.gl.add_widget(kol)
-            self.drop_vis.add_widget(self.gl)
-        self.bl.add_widget(self.drop_vis)
+
         print(sm.get_screen('config2').what_visual)
-        self.add_widget(self.bl)
+
 
 
 class PaswordingApp(App):

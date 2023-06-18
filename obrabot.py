@@ -12,7 +12,7 @@ data = pd.DataFrame(excel_data)
 all_us = data['Название'].unique()
 all_event = data['Элемент оценивания'].unique()
 # блок обработки данных
-def work(user, event, data = data):
+def edit( data = data):
     # сначала очищаются данные от не нужных стобцов
     data.drop(columns=['Адрес электронной почты','Исходная оценка', 'Оценщик', 'Источник', 'Переопределена', 'Заблокировано', 'Исключено из вычислений', 'Текст отзыва'],inplace=True)
     for i in data['Дата и время']:
@@ -40,15 +40,15 @@ def work(user, event, data = data):
         data = data.replace(i , b)
         # Теперь изменяют тип данных для работы со временм
     data['Дата и время'] = data['Дата и время'].astype("datetime64[ns]")
-    date_start = pd.Timestamp('2022-09-01')
-
 
     for grade in data['Исправленная оценка'].dropna():
-
         b = grade.replace(',', '.')
         data = data.replace(grade, b)
-
     data['Исправленная оценка'] = data['Исправленная оценка'].astype("float")
+    return data
+data = edit(data)
+def work(user, event, iter, data=data):
+    date_start = pd.Timestamp('2022-09-01')
     max_score = {}
     for j in event:
         a = data[data['Элемент оценивания'] == j]
@@ -59,7 +59,7 @@ def work(user, event, data = data):
 
         ts = {}
         sum_p = 0
-        for numb, i in enumerate(user):
+        for numb, i in enumerate(all_us):
             ts2 = {}
             # обрабатываем все элементы в файле для сбора нужных оценок
             for j in event:
@@ -132,16 +132,17 @@ def work(user, event, data = data):
                 polar=dict(radialaxis=dict(visible=True, range=[0, 1])), showlegend=True)
             vis.append(fig)
         for figure, figure_num in enumerate(vis):
-            figure_num.write_image(f"source/img_{ap_i}-{month}.png")
+            figure_num.write_image(f"source/img_{ap_i}-{month}-{iter}.png")
             res.append(figure_num)
         vis = []
-        return [3, 6]
+
 def get_event():
     return sorted(list(all_event))
 def get_user():
     return sorted(list(all_us))
 
+
 # work(all_us[:1], ['Лабораторная работа 6.', 'Лабораторная работа 3.', 'Лабораторная работа 4.',
-# 'Лабораторная работа 5.', 'Тест 2.', 'Тест 1.', 'Лабораторная работа 2.', 'Лабораторная работа 1.'])
+# 'Лабораторная работа 5.', 'Тест 2.', 'Тест 1.', 'Лабораторная работа 2.', 'Лабораторная работа 1.'], 1)
 
 
