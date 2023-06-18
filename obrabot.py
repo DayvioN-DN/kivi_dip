@@ -135,7 +135,8 @@ def work(user, event, data = data):
         vis = []
 def get_event():
     return sorted(list(all_event))
-
+def get_user():
+    return sorted(list(all_us))
 
 # work(all_us[:4], all_event)
 # ['Лабораторная работа 6.', 'Лабораторная работа 3.', 'Лабораторная работа 4.',

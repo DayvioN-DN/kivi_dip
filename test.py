@@ -128,8 +128,7 @@ class ScreenConfig(Screen):
             text="Далее",
             background_color=[0, 1.5, 3, 1],
             size_hint=[.1, 0.1],
-            # on_press=self.back,
-            )
+            on_press=self.next, )
         ad = self.btn.text
         al1.add_widget(self.btn)
         self.bl = BoxLayout(orientation = 'vertical' )
@@ -145,7 +144,9 @@ class ScreenConfig(Screen):
     def back(self, *args):
         self.manager.transition.direction = 'left'
         self.manager.current = 'config1'
-
+    def next(self, *args):
+        self.manager.current = 'config3'
+        sm.get_screen('config3').visual()
     def determine_visual(self, what_visual, num, event):
         if what_visual[num][event] == False:
             what_visual[num][event] = True
@@ -175,7 +176,7 @@ class ScreenConfig(Screen):
                 btn1 = ToggleButton(text=f'{index}', group=f'{index}-{i}', size_hint_y=None, height=23, )
                 btn1.bind(on_release=lambda btn1: dropdown.select([int(btn1.group[-1]), btn1.text]))
                 dropdown.add_widget(btn1)
-            mainbutton = Button(text='Hello', size_hint=(1, 1),  background_color=[0, 1.5, 3, 1], )
+            mainbutton = Button(text='Выберете элемент визуализации', size_hint=(1, 1),  background_color=[0, 1.5, 3, 1], )
             mainbutton.bind(on_release=dropdown.open)
             dropdown.bind(on_select=lambda instance, x: self.determine_visual(what_visual, x[0], x[1]))
             # dropdown.bind(on_select=lambda instance, x: print(self.gl.children[::-1][(x[0] * 3) + 1].text, x[1]))
@@ -188,17 +189,51 @@ class ScreenConfig(Screen):
         # self.determine_visual(what_visual)
         self.bl.add_widget(kol)
 
-
+    def calling(self):
+        sm.get_screen('config3')
 
     def get_data(self, ind):
         mas = []
         mas.append(ind)
         print(mas)
+
+class Screenvisual(Screen):
+    def __init__ (self, **kwargs):
+        super().__init__(**kwargs)
+        al = AnchorLayout(anchor_x="left", anchor_y="bottom", padding=[10])
+        print(get_event())
+        self.btn = Button(
+            text="назад",
+            background_color=[0, 1.5, 3, 1],
+            size_hint=[.1, 0.1],
+             )
+        ad = self.btn.text
+        al.add_widget(self.btn)
+        self.add_widget(al)
+        self.bl = BoxLayout(orientation='vertical')
+
+    def visual(self):
+        kol = Label(text='выберите студента ', color=[0, 0, 0, 1], size=[700, 80])
+        self.gl = GridLayout(cols=3, size_hint=[1, .5], padding=[50])
+        self.gl.add_widget(kol)
+        dropdown1 = DropDown()
+        for index in get_user():
+            btn1 = Button(text=f'{index}',  size_hint_y=None, height=23, )
+            btn1.bind(on_release=lambda btn1: dropdown1.select(btn1.text]))
+            dropdown1.add_widget(btn1)
+        mainbutton = Button(text='Выберете элемент визуализации', size_hint=(1, 1), background_color=[0, 1.5, 3, 1], )
+        mainbutton.bind(on_release=dropdown1.open)
+        dropdown1.bind(on_select=lambda instance, x: self.determine_visual(what_visual, x[0], x[1]))
+        for block_visual in range(int(sm.get_screen('config1').ids.inpt.text)):
+            kol = Label(text='Напишите название ', color=[0, 0, 0, 1], size=[700, 80])
+            self.bl.add_widget(kol)
+        self.add_widget(self.bl)
+
 class PaswordingApp(App):
     def build(self):
-
         sm.add_widget(ScreenMain(name='config1'))
         sm.add_widget(ScreenConfig(name='config2'))
+        sm.add_widget(Screenvisual(name='config3'))
         return sm
 
 if __name__ == "__main__":
