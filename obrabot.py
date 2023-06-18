@@ -54,7 +54,7 @@ def work(user, event, data = data):
         a = data[data['Элемент оценивания'] == j]
         max_score[j] = max(a['Исправленная оценка'])
 
-    for month in range(3, 11):
+    for month in range(3, 9):
         ndata = data.loc[(data['Дата и время'] < date_start + pd.DateOffset(months=month))]
 
         ts = {}
@@ -111,6 +111,7 @@ def work(user, event, data = data):
             max_rat = list(map(max, zip(max_rat, arr)))
         # Блок визуализации, он проходит циклом по каждому пользователю
         vis = []
+        res = []
         for kol23, ap_i in enumerate(ts):
             values = []
             cat = list(ts[ap_i].keys())
@@ -131,14 +132,16 @@ def work(user, event, data = data):
                 polar=dict(radialaxis=dict(visible=True, range=[0, 1])), showlegend=True)
             vis.append(fig)
         for figure, figure_num in enumerate(vis):
-            figure_num.write_image(f"images{figure}-{month}.png")
+            figure_num.write_image(f"source/img_{ap_i}-{month}.png")
+            res.append(figure_num)
         vis = []
+        return [3, 6]
 def get_event():
     return sorted(list(all_event))
 def get_user():
     return sorted(list(all_us))
 
-# work(all_us[:4], all_event)
-# ['Лабораторная работа 6.', 'Лабораторная работа 3.', 'Лабораторная работа 4.',
-# 'Лабораторная работа 5.', 'Тест 2.', 'Тест 1.', 'Лабораторная работа 2.', 'Лабораторная работа 1.']
+# work(all_us[:1], ['Лабораторная работа 6.', 'Лабораторная работа 3.', 'Лабораторная работа 4.',
+# 'Лабораторная работа 5.', 'Тест 2.', 'Тест 1.', 'Лабораторная работа 2.', 'Лабораторная работа 1.'])
+
 

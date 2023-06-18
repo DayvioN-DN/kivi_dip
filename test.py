@@ -141,6 +141,7 @@ class ScreenConfig(Screen):
         self.add_widget(self.bl)
         self.add_widget(al)
         self.add_widget(al1)
+        self.what_visual = []
     def back(self, *args):
         self.manager.transition.direction = 'left'
         self.manager.current = 'config1'
@@ -153,15 +154,17 @@ class ScreenConfig(Screen):
         else:
             what_visual[num][event] = False
         print(what_visual)
+        return what_visual
+
 
     def output_(self):
-        what_visual = []
+
         for i in range(int(sm.get_screen('config1').ids.inpt.text)):
 
             opr_dict = {}
             for ev in get_event():
                 opr_dict[ev] = False
-            what_visual.append(opr_dict)
+            self.what_visual.append(opr_dict)
             kol = Label(text='Напишите название блоков', color=[0, 0, 0, 1], size_hint=[1, .1], )
             self.gl.add_widget(kol)
             self.kol = TextInput(
@@ -178,7 +181,7 @@ class ScreenConfig(Screen):
                 dropdown.add_widget(btn1)
             mainbutton = Button(text='Выберете элемент визуализации', size_hint=(1, 1),  background_color=[0, 1.5, 3, 1], )
             mainbutton.bind(on_release=dropdown.open)
-            dropdown.bind(on_select=lambda instance, x: self.determine_visual(what_visual, x[0], x[1]))
+            dropdown.bind(on_select=lambda instance, x: self.determine_visual(self.what_visual, x[0], x[1]))
             # dropdown.bind(on_select=lambda instance, x: print(self.gl.children[::-1][(x[0] * 3) + 1].text, x[1]))
             # dropdown.select(int(btn1.group[-1]))
             self.gl.add_widget(mainbutton)
@@ -210,24 +213,41 @@ class Screenvisual(Screen):
         ad = self.btn.text
         al.add_widget(self.btn)
         self.add_widget(al)
-        self.bl = BoxLayout(orientation='vertical')
+
 
     def visual(self):
-        kol = Label(text='выберите студента ', color=[0, 0, 0, 1], size=[700, 80])
-        self.gl = GridLayout(cols=3, size_hint=[1, .5], padding=[50])
-        self.gl.add_widget(kol)
+        self.bl = BoxLayout(orientation='vertical')
+        self.gl_vis = GridLayout(cols=2, size_hint=[1, .05], padding=[50])
+        self.al = AnchorLayout(anchor_x="center", anchor_y="top", padding=[10],size_hint=[1, .2])
         dropdown1 = DropDown()
+
+        kol = Label(text='выберите студента ', color=[0, 0, 0, 1], size=[700, 80])
+        self.gl_vis.add_widget(kol)
+
         for index in get_user():
-            btn1 = Button(text=f'{index}',  size_hint_y=None, height=23, )
-            btn1.bind(on_release=lambda btn1: dropdown1.select(btn1.text]))
-            dropdown1.add_widget(btn1)
-        mainbutton = Button(text='Выберете элемент визуализации', size_hint=(1, 1), background_color=[0, 1.5, 3, 1], )
-        mainbutton.bind(on_release=dropdown1.open)
-        dropdown1.bind(on_select=lambda instance, x: self.determine_visual(what_visual, x[0], x[1]))
+            btn = Button(text=f'{index}', size_hint_y=None, height=23)
+            btn.bind(on_release=lambda btn: dropdown1.select(btn.text))
+            dropdown1.add_widget(btn)
+        mainbutton1 = Button(text='Выберите студента',  size_hint=(None, None), background_color=[0, 1.5, 3, 1], size = [180, 40])
+        mainbutton1.bind(on_release=dropdown1.open)
+        dropdown1.bind(on_select=lambda instance, x: setattr(mainbutton1, 'text', x))
+        self.gl_vis.add_widget(mainbutton1)
+        self.drop_vis = DropDown(size_hint=[1, 1])
+        bt_vis = Button(text='визуализировать', size_hint=(None, None), background_color=[0, 1.5, 3, 1], size=[180, 40], on_press = self.drop_vis.open)
+        self.gl_vis.add_widget(bt_vis)
+        self.al.add_widget(self.gl_vis)
+        self.bl.add_widget(self.al)
+
+
         for block_visual in range(int(sm.get_screen('config1').ids.inpt.text)):
-            kol = Label(text='Напишите название ', color=[0, 0, 0, 1], size=[700, 80])
-            self.bl.add_widget(kol)
+            self.gl = GridLayout(cols=7, size_hint_y=None, height=55, padding=[50])
+            kol = Label(text='Напишите название ', color=[0, 0, 0, 1], size_hint_y=None, height=55)
+            self.gl.add_widget(kol)
+            self.drop_vis.add_widget(self.gl)
+        self.bl.add_widget(self.drop_vis)
+        print(sm.get_screen('config2').what_visual)
         self.add_widget(self.bl)
+
 
 class PaswordingApp(App):
     def build(self):
