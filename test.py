@@ -233,10 +233,10 @@ class Screenvisual(Screen):
             self.gl = GridLayout(cols=4, padding=[50])
             kol = Label(text='название ', color=[0, 0, 0, 1], size_hint=[.05, .1])
             self.gl.add_widget(kol)
-        for img in range(3, 9):
-            im = Image(source=f"source/img_{mainbutton1[0]}-{img}-{block_visual}.png", )
-            self.gl.add_widget(im)
-        self.bl.add_widget(self.gl)
+            for img in range(3, 6):
+                im = Image(source=f"source/img_{mainbutton1[0]}-{img}-{block_visual}.png", )
+                self.gl.add_widget(im)
+            self.bl.add_widget(self.gl)
         self.add_widget(self.bl)
     def visual(self):
         self.al = AnchorLayout(anchor_x="center", anchor_y="top", padding=[10])

@@ -47,7 +47,7 @@ def edit( data = data):
     data['Исправленная оценка'] = data['Исправленная оценка'].astype("float")
     return data
 data = edit(data)
-def work(user, event, iter, data=data):
+def work( user, event, iter, data=data):
     date_start = pd.Timestamp('2022-09-01')
     max_score = {}
     for j in event:
@@ -61,6 +61,7 @@ def work(user, event, iter, data=data):
         sum_p = 0
         for numb, i in enumerate(all_us):
             ts2 = {}
+
             # обрабатываем все элементы в файле для сбора нужных оценок
             for j in event:
                 a = ndata[ndata['Элемент оценивания'] == j]
@@ -79,11 +80,10 @@ def work(user, event, iter, data=data):
                 if point != 0:
                     point = point / max_score[j]
                 ts2[j] = [point]
-            print('----------')
             ts[i] = ts2
         # то что выше надо переделать для всех элементов которые подаются в файле
         df = pd.DataFrame(ts)
-        print(ts, '----------')
+        # print( '----------')
         cat = df.columns
         # Рассчитываем среднее значение
         avg_sum = 0
@@ -113,27 +113,31 @@ def work(user, event, iter, data=data):
         vis = []
         res = []
         for kol23, ap_i in enumerate(ts):
+
             values = []
             cat = list(ts[ap_i].keys())
             avg_sum = 0
             for kol, _ in enumerate(ts[ap_i].keys()):
                 qvo_sum = ts[ap_i][_][0]
                 values.append(ts[ap_i][_][0])
-            print(kol23)
             values.append(values[0])
             max_rat.append(max_rat[0])
             cat.append(cat[0])
             fig = go.Figure()
+            # print('val avg', val_avg)
+            # print('values', values)
+            # print('max_rat', max_rat)
             # Выбирается что именно будет отображаться на визуализации(среднее значение, максимальное)
             fig.add_trace(go.Scatterpolar(r=val_avg, theta=cat, fill='toself', name='среднее'))
             fig.add_trace(go.Scatterpolar(r=values, theta=cat, fill='toself', name=ap_i))
-            fig.add_trace(go.Scatterpolar(r=max_rat, theta=cat, fill='none', name='макисмальное значени'))
+            # fig.add_trace(go.Scatterpolar(r=max_rat, theta=cat, fill='none', name='макисмальное значени'))
             fig.update_layout(
                 polar=dict(radialaxis=dict(visible=True, range=[0, 1])), showlegend=True)
             vis.append(fig)
-        for figure, figure_num in enumerate(vis):
-            figure_num.write_image(f"source/img_{ap_i}-{month}-{iter}.png")
-            res.append(figure_num)
+            if ap_i == user[0]:
+                for figure, figure_num in enumerate(vis):
+                    figure_num.write_image(f"source/img_{ap_i}-{month}-{iter}.png")
+                    res.append(figure_num)
         vis = []
 
 def get_event():
@@ -142,7 +146,7 @@ def get_user():
     return sorted(list(all_us))
 
 
-# work(all_us[:1], ['Лабораторная работа 6.', 'Лабораторная работа 3.', 'Лабораторная работа 4.',
+# work( ['Лабораторная работа 6.', 'Лабораторная работа 3.', 'Лабораторная работа 4.',
 # 'Лабораторная работа 5.', 'Тест 2.', 'Тест 1.', 'Лабораторная работа 2.', 'Лабораторная работа 1.'], 1)
 
 
