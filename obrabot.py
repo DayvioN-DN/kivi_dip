@@ -113,28 +113,44 @@ def work( user, event, iter, data=data):
         vis = []
         res = []
         for kol23, ap_i in enumerate(ts):
-
-            values = []
-            cat = list(ts[ap_i].keys())
-            avg_sum = 0
-            for kol, _ in enumerate(ts[ap_i].keys()):
-                qvo_sum = ts[ap_i][_][0]
-                values.append(ts[ap_i][_][0])
-            values.append(values[0])
-            max_rat.append(max_rat[0])
-            cat.append(cat[0])
-            fig = go.Figure()
-            # print('val avg', val_avg)
-            # print('values', values)
-            # print('max_rat', max_rat)
-            # Выбирается что именно будет отображаться на визуализации(среднее значение, максимальное)
-            fig.add_trace(go.Scatterpolar(r=val_avg, theta=cat, fill='toself', name='среднее'))
-            fig.add_trace(go.Scatterpolar(r=values, theta=cat, fill='toself', name=ap_i))
-            # fig.add_trace(go.Scatterpolar(r=max_rat, theta=cat, fill='none', name='макисмальное значени'))
-            fig.update_layout(
-                polar=dict(radialaxis=dict(visible=True, range=[0, 1])), showlegend=True)
-            vis.append(fig)
             if ap_i == user[0]:
+                values = []
+                cat = list(ts[ap_i].keys())
+                avg_sum = 0
+                for kol, _ in enumerate(ts[ap_i].keys()):
+                    qvo_sum = ts[ap_i][_][0]
+                    values.append(ts[ap_i][_][0])
+
+                fig = go.Figure()
+                print('val avg', val_avg)
+                print('cat', len(cat), cat)
+                print('values', values)
+                # print('max_rat', max_rat)
+                # Выбирается что именно будет отображаться на визуализации(среднее значение, максимальное)
+                if len(cat) < 5:
+                    fig = go.Figure(data=[go.Bar(
+                        name='среднее',
+                        x=cat,
+                        y=val_avg
+                    ),
+                        go.Bar(
+                            name=ap_i,
+                            x=cat,
+                            y=values
+                        )
+                    ])
+                else:
+                    values.append(values[0])
+                    max_rat.append(max_rat[0])
+                    val_avg.append(val_avg[0])
+                    cat.append(cat[0])
+                    fig.add_trace(go.Scatterpolar(r=val_avg, theta=cat, fill='toself', name='среднее'))
+                    fig.add_trace(go.Scatterpolar(r=values, theta=cat, fill='toself', name=ap_i))
+                    # fig.add_trace(go.Scatterpolar(r=max_rat, theta=cat, fill='none', name='макисмальное значени'))
+                    fig.update_layout(
+                        polar=dict(radialaxis=dict(visible=True, range=[0, 1])), showlegend=True)
+                vis.append(fig)
+
                 for figure, figure_num in enumerate(vis):
                     figure_num.write_image(f"source/img_{ap_i}-{month}-{iter}.png")
                     res.append(figure_num)

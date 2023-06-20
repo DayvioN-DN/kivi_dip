@@ -218,6 +218,11 @@ class Screenvisual(Screen):
         self.add_widget(al)
 
     def click(self, mainbutton1):
+        if len(self.children) > 2:
+            print(self.bl.children)
+            self.remove_widget(self.bl)
+            print(self.bl.children)
+        self.bl = BoxLayout(orientation='vertical')
         mainbutton1 = [mainbutton1]
         a = sm.get_screen('config2').what_visual
         print(mainbutton1, 'ada')
@@ -237,10 +242,15 @@ class Screenvisual(Screen):
                 im = Image(source=f"source/img_{mainbutton1[0]}-{img}-{block_visual}.png", )
                 self.gl.add_widget(im)
             self.bl.add_widget(self.gl)
+
         self.add_widget(self.bl)
+        print(self.children)
+
+
+
     def visual(self):
         self.al = AnchorLayout(anchor_x="center", anchor_y="top", padding=[10])
-        self.bl = BoxLayout(orientation='vertical')
+
         self.gl_vis = GridLayout(cols=2, size_hint=[1, .2], padding=[50])
 
         dropdown1 = DropDown()
