@@ -13,6 +13,7 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.filechooser import FileChooser
 from kivy.uix.image import Image
+from kivy.uix.scrollview import ScrollView
 
 from obrabot import *
 
@@ -223,6 +224,9 @@ class Screenvisual(Screen):
             self.remove_widget(self.bl)
             print(self.bl.children)
         self.bl = BoxLayout(orientation='vertical')
+        self.gl = GridLayout(cols=4, padding=[50], size_hint=(1, None))
+        self.gl.bind(minimum_height=self.gl.setter('height'))
+        scroll_y = ScrollView(size_hint=(1, None), size=(1980, Window.height))
         mainbutton1 = [mainbutton1]
         a = sm.get_screen('config2').what_visual
         print(mainbutton1, 'ada')
@@ -235,13 +239,15 @@ class Screenvisual(Screen):
                 a[block_visual].pop(i)
             work(mainbutton1[:1], a[block_visual], block_visual)
             print(a)
-            self.gl = GridLayout(cols=4, padding=[50])
-            kol = Label(text='название ', color=[0, 0, 0, 1], size_hint=[.05, .1])
+
+            kol = Label(text='название ', color=[0, 0, 0, 1], size_hint=[.05, None], size = (555, 300))
             self.gl.add_widget(kol)
             for img in range(3, 6):
-                im = Image(source=f"source/img_{mainbutton1[0]}-{img}-{block_visual}.png", )
+                im = Image(source=f"source/img_{mainbutton1[0]}-{img}-{block_visual}.png", size = (555, 300) )
                 self.gl.add_widget(im)
-            self.bl.add_widget(self.gl)
+
+        scroll_y.add_widget(self.gl)
+        self.bl.add_widget(scroll_y)
 
         self.add_widget(self.bl)
         print(self.children)

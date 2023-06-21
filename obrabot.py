@@ -148,9 +148,9 @@ def work( user, event, iter, data=data):
                     max_rat.append(max_rat[0])
                     val_avg.append(val_avg[0])
                     cat.append(cat[0])
-                    # fig.add_trace(go.Scatterpolar(r=val_avg, theta=cat, fill='toself', name='среднее'))
+                    fig.add_trace(go.Scatterpolar(r=val_avg, theta=cat, fill='toself', name='среднее'))
                     fig.add_trace(go.Scatterpolar(r=values, theta=cat, fill='toself', name=ap_i))
-                    fig.add_trace(go.Scatterpolar(r=max_rat, theta=cat, fill='none', name='макисмальное значени'))
+                    # fig.add_trace(go.Scatterpolar(r=max_rat, theta=cat, fill='none', name='макисмальное значени'))
                     fig.update_layout(
                         polar=dict(radialaxis=dict(visible=True, range=[0, 1])), showlegend=True)
                 vis.append(fig)
