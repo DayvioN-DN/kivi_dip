@@ -257,6 +257,9 @@ class Screenvisual(Screen):
 
         kol = Label(text='выберите студента ', color=[0, 0, 0, 1], size=[700, 80])
         self.gl_vis.add_widget(kol)
+        # kol = btn = Button(text=f'Выберите вид визуализации', size_hint_y=None, height=23)
+        # kol.bind(on_release=lambda btn: dropdown1.select(kol.text))
+        # self.gl_vis.add_widget(kol)
 
         for index in get_user():
             btn = Button(text=f'{index}', size_hint_y=None, height=23)

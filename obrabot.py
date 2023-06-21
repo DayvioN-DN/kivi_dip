@@ -96,8 +96,12 @@ def work( user, event, iter, data=data):
             ar = [0] * len(ts[avg_i])
             for kol, _ in enumerate(ts[avg_i].keys()):
                 ar[kol] += ts[avg_i][_][0]
+
             val_avg = list(map(sum, zip(val_avg, ar)))
-        val_avg = list(map(lambda x: x / kol, val_avg))
+        try:
+            val_avg = list(map(lambda x: x / kol, val_avg))
+        except ZeroDivisionError:
+            val_avg = list(map(lambda x: 1 , val_avg))
 
         max_rat = []
         for ran in ts:
@@ -144,9 +148,9 @@ def work( user, event, iter, data=data):
                     max_rat.append(max_rat[0])
                     val_avg.append(val_avg[0])
                     cat.append(cat[0])
-                    fig.add_trace(go.Scatterpolar(r=val_avg, theta=cat, fill='toself', name='среднее'))
+                    # fig.add_trace(go.Scatterpolar(r=val_avg, theta=cat, fill='toself', name='среднее'))
                     fig.add_trace(go.Scatterpolar(r=values, theta=cat, fill='toself', name=ap_i))
-                    # fig.add_trace(go.Scatterpolar(r=max_rat, theta=cat, fill='none', name='макисмальное значени'))
+                    fig.add_trace(go.Scatterpolar(r=max_rat, theta=cat, fill='none', name='макисмальное значени'))
                     fig.update_layout(
                         polar=dict(radialaxis=dict(visible=True, range=[0, 1])), showlegend=True)
                 vis.append(fig)
