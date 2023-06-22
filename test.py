@@ -13,6 +13,8 @@ from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.filechooser import FileChooser
 from kivy.uix.image import Image
 from kivy.uix.scrollview import ScrollView
+import os, sys
+from kivy.resources import resource_add_path, resource_find
 
 from obrabot import *
 
@@ -176,14 +178,13 @@ class ScreenConfig(Screen):
                 font_size=17, size_hint=[1, .12],
                 background_color=[1, 1, 1, .7])
             self.gl.add_widget(self.kol)
-            dropdown = DropDown()
-            mas = []
 
+            dropdown = DropDown()
             for index in get_event():
                 btn1 = ToggleButton(text=f'{index}', group=f'{index}-{i}', size_hint_y=None, height=23, )
                 btn1.bind(on_release=lambda btn1: dropdown.select([int(btn1.group[-1]), btn1.text]))
                 dropdown.add_widget(btn1)
-            mainbutton = Button(text='Выберете элемент визуализации', size_hint=(1, 1),  background_color=[0, 1.5, 3, 1], )
+            mainbutton = Button(text='Выберите элемент визуализации', size_hint=(1, 1),  background_color=[0, 1.5, 3, 1], )
             mainbutton.bind(on_release=dropdown.open)
             dropdown.bind(on_select=lambda instance, x: self.determine_visual(self.what_visual, x[0], x[1]))
             # dropdown.bind(on_select=lambda instance, x: print(self.gl.children[::-1][(x[0] * 3) + 1].text, x[1]))
@@ -218,14 +219,16 @@ class Screenvisual(Screen):
         self.add_widget(al)
 
     def click(self, mainbutton1):
+
         if len(self.children) > 2:
             print(self.bl.children)
             self.remove_widget(self.bl)
             print(self.bl.children)
         self.bl = BoxLayout(orientation='vertical')
+
         self.gl = GridLayout(cols=4, padding=[50], size_hint=(1, None))
         self.gl.bind(minimum_height=self.gl.setter('height'))
-        scroll_y = ScrollView(size_hint=(1, None), size=(1980, Window.height))
+        scroll_y = ScrollView(size_hint=(1, None), size=(1900, Window.height -100))
         mainbutton1 = [mainbutton1]
         a = sm.get_screen('config2').what_visual
         print(mainbutton1, 'ada')
@@ -239,7 +242,8 @@ class Screenvisual(Screen):
             work(mainbutton1[:1], a[block_visual], block_visual)
             print(a)
 
-            kol = Label(text='название ', color=[0, 0, 0, 1], size_hint=[.05, None], size = (555, 300))
+            kol = Label(text=sm.get_screen('config2').gl.children[1 +(3 * block_visual)].text, color=[0, 0, 0, 1], size_hint=[.05, None],
+                        size = (555, 300))
             self.gl.add_widget(kol)
             for img in range(3, 6):
                 im = Image(source=f"source/img_{mainbutton1[0]}-{img}-{block_visual}.png", size = (555, 300) )
@@ -257,15 +261,14 @@ class Screenvisual(Screen):
         self.al = AnchorLayout(anchor_x="center", anchor_y="top", padding=[10])
 
         self.gl_vis = GridLayout(cols=2, size_hint=[1, .2], padding=[50])
+        print('------', )
 
-        dropdown1 = DropDown()
 
-        kol = Label(text='выберите студента ', color=[0, 0, 0, 1], size=[700, 80])
-        self.gl_vis.add_widget(kol)
+
         # kol = btn = Button(text=f'Выберите вид визуализации', size_hint_y=None, height=23)
         # kol.bind(on_release=lambda btn: dropdown1.select(kol.text))
         # self.gl_vis.add_widget(kol)
-
+        dropdown1 = DropDown()
         for index in get_user():
             btn = Button(text=f'{index}', size_hint_y=None, height=23)
             btn.bind(on_release=lambda btn: dropdown1.select(btn.text))
@@ -291,6 +294,8 @@ class PaswordingApp(App):
         return sm
 
 if __name__ == "__main__":
+    if hasattr(sys, '_MEIPASS'):
+        resource_add_path(os.path.join(sys._MEIPASS))
     PaswordingApp().run()
 
 

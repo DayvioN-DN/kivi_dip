@@ -7,6 +7,14 @@ import re
 import plotly.graph_objs as go
 import os
 
+try:
+    new_dir = 'source'
+    parent_dir = os.getcwd()
+    path = os.path.join(parent_dir, new_dir)
+    os.mkdir(path)
+    print('------------------!!!', parent_dir)
+except FileExistsError:
+    pass
 excel_data = pd.read_excel('grade_history .xlsx')
 data = pd.DataFrame(excel_data)
 all_us = data['Название'].unique()
@@ -81,7 +89,6 @@ def work( user, event, iter, data=data):
                     point = point / max_score[j]
                 ts2[j] = [point]
             ts[i] = ts2
-        # то что выше надо переделать для всех элементов которые подаются в файле
         df = pd.DataFrame(ts)
         # print( '----------')
         cat = df.columns
@@ -137,11 +144,11 @@ def work( user, event, iter, data=data):
                         x=cat,
                         y=val_avg
                     ),
-                        go.Bar(
-                            name=ap_i,
-                            x=cat,
-                            y=values
-                        )
+                    go.Bar(
+                        name=ap_i,
+                        x=cat,
+                        y=values
+                    )
                     ])
                 else:
                     values.append(values[0])
