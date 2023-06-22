@@ -9,7 +9,6 @@ from kivy.uix.label import Label
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.dropdown import DropDown
-from kivy.uix.checkbox import CheckBox
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.filechooser import FileChooser
 from kivy.uix.image import Image
